@@ -57,7 +57,7 @@
 
 /*
  * access_ok()
- * get_user()
+ * copy_from_user()
  * copy_to_user()
  * VERIFY_READ
  * VERIFY_WRITE
@@ -447,16 +447,12 @@ unsigned int vfwmon_hook_func(unsigned int hooknum,
 		return ret;
 
 	sb = *skb;
-	if (!sb) {
-		vfwmon_debug("error: sk_buff is NULL\n");
+	if (!sb)
 		return ret;
-	}
 
 	iph = sb->nh.iph;
-	if (!iph) {
-		vfwmon_debug("error: iphdr is NULL\n");
+	if (!iph)
 		return ret;
-	}
 
 	protocol = iph->protocol;
 	switch (protocol) {
@@ -619,7 +615,6 @@ void vfwmon_check(void)
 		if (time_after_eq(jiffies, rule->conn.timeout)) {
 			list_rule_del(rule);
 			vfwmon_debug("pending rule removed from pending_list\n");
-			continue;
 		}
 	vfwmon_core_unlock();
 

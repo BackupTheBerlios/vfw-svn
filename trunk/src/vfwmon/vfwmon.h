@@ -27,6 +27,7 @@
 
 struct conn_info {
 	pid_t pid;
+	unsigned char pcsum[20];
 	unsigned int daddr;
 	unsigned short dest;
 	unsigned int action;
