@@ -17,9 +17,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */ 
 
+#define SHA1_DIGEST_SIZE 20
+
 struct conn_info {
 	pid_t pid;
-	unsigned char pcsum[20];
+	unsigned char pcsum[SHA1_DIGEST_SIZE];
 	unsigned int daddr;
 	unsigned short dest;
 	unsigned int action;

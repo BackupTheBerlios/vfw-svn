@@ -24,10 +24,11 @@
 #define VFWMON_DELAY 1
 #define VFWMON_TIMEOUT 15
 #define VFWMON_RETRY 10
+#define SHA1_DIGEST_SIZE 20
 
 struct conn_info {
 	pid_t pid;
-	unsigned char pcsum[20];
+	unsigned char pcsum[SHA1_DIGEST_SIZE];
 	unsigned int daddr;
 	unsigned short dest;
 	unsigned int action;
