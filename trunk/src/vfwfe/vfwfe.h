@@ -41,6 +41,16 @@ enum {
 	MODE_RESET
 };
 
+extern int fd;
+
+void vfwfe_mode_set(unsigned int mode_num);
+struct conn_info * vfwfe_conn_get(void);
+void vfwfe_path_get(pid_t pid, unsigned char *path);
+void vfwfe_checksum_calc(unsigned char *pcsum, const unsigned char *path);
+void vfwfe_checksum_print(const unsigned char *pcsum, unsigned char *result);
+void new_connection(void);
+
+#define VFWMON_IOC_MAGIC 0x44
 #define VFWMON_IOC_GETMODE _IOR(VFWMON_IOC_MAGIC, 0, unsigned int)
 #define VFWMON_IOC_SETMODE _IOW(VFWMON_IOC_MAGIC, 1, unsigned int)
 #define VFWMON_IOC_GET _IOR(VFWMON_IOC_MAGIC, 2, struct conn_info)
@@ -48,4 +58,5 @@ enum {
 #define VFWMON_IOC_SUBMIT_SAVE _IOW(VFWMON_IOC_MAGIC, 4, struct conn_info)
 #define VFWMON_IOC_ADD _IOW(VFWMON_IOC_MAGIC, 5, struct conn_info)
 #define VFWMON_IOC_DELETE _IOW(VFWMON_IOC_MAGIC, 6, struct conn_info)
+#define VFWMON_IOC_MAXNR 8
 

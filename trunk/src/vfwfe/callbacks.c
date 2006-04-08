@@ -37,6 +37,10 @@ void on_vfwfe_rule_accept_clicked(GtkButton *button,
 void on_vfwfe_rule_cancel_clicked(GtkButton *button,
 				  gpointer user_data)
 {
+	GtkWidget *vfwfe_alert_out;
+
+	vfwfe_alert_out = lookup_widget(GTK_WIDGET(button), "vfwfe_alert_out");
+	gtk_widget_destroy(vfwfe_alert_out);
 }
 
 void on_vfwfe_rule_drop_clicked(GtkButton *button,
