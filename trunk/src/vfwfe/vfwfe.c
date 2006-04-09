@@ -32,12 +32,12 @@
 #include <arpa/inet.h>
 #include <gtk/gtk.h>
 
+#include "sha1.h"
+#include "vfwfe.h"
+
 #include "callbacks.h"
 #include "interface.h"
 #include "support.h"
-
-#include "sha1.h"
-#include "vfwfe.h"
 
 int fd;
 
@@ -70,6 +70,18 @@ struct conn_info * vfwfe_conn_get(void)
 	}
 
 	return conn;
+}
+
+int vfwfe_conn_submit(unsigned long *id, int save)
+{
+	int ret;
+
+	if (save)
+		ret = ioctl(fd, VFWMON_IOC_SUBMIT_SAVE, id);
+	else
+		ret = ioctl(fd, VFWMON_IOC_SUBMIT, id);
+
+	return ret;
 }
 
 void vfwfe_path_get(pid_t pid, unsigned char *path)
@@ -142,7 +154,7 @@ void new_connection(void)
 	snprintf(daddr, sizeof(daddr), "%s", inet_ntoa(tmp));
 	snprintf(dest, sizeof(dest), "%d", ntohs(conn->dest));
 
-	vfwfe_alert_out = create_vfwfe_alert_out();
+	vfwfe_alert_out = create_vfwfe_alert_out(conn);
 
 	vfwfe_entry_pid = lookup_widget(GTK_WIDGET(vfwfe_alert_out), "vfwfe_entry_pid");
 	vfwfe_entry_path = lookup_widget(GTK_WIDGET(vfwfe_alert_out), "vfwfe_entry_path");

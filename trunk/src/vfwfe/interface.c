@@ -26,6 +26,8 @@
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
 
+#include "vfwfe.h"
+
 #include "callbacks.h"
 #include "interface.h"
 #include "support.h"
@@ -328,7 +330,7 @@ create_vfwfe_main (void)
 }
 
 GtkWidget*
-create_vfwfe_alert_out (void)
+create_vfwfe_alert_out (struct conn_info *conn)
 {
   GtkWidget *vfwfe_alert_out;
   GtkWidget *dialog_vbox1;
@@ -546,13 +548,13 @@ create_vfwfe_alert_out (void)
                     NULL);
   g_signal_connect ((gpointer) vfwfe_rule_accept, "clicked",
                     G_CALLBACK (on_vfwfe_rule_accept_clicked),
-                    NULL);
+                    conn);
   g_signal_connect ((gpointer) vfwfe_rule_cancel, "clicked",
                     G_CALLBACK (on_vfwfe_rule_cancel_clicked),
                     NULL);
   g_signal_connect ((gpointer) vfwfe_rule_drop, "clicked",
                     G_CALLBACK (on_vfwfe_rule_drop_clicked),
-                    NULL);
+                    conn);
 
   /* Store pointers to all widgets, for use by lookup_widget(). */
   GLADE_HOOKUP_OBJECT_NO_REF (vfwfe_alert_out, vfwfe_alert_out, "vfwfe_alert_out");

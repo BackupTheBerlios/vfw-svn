@@ -17,7 +17,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */ 
 
+#include <stdlib.h>
+#include <linux/netfilter.h>
 #include <gtk/gtk.h>
+
+#include "vfwfe.h"
 
 #include "callbacks.h"
 #include "interface.h"
@@ -51,6 +55,17 @@ void on_vfwfe_check_save_toggled(GtkToggleButton *togglebutton,
 void on_vfwfe_rule_accept_clicked(GtkButton *button,
 				  gpointer user_data)
 {
+	GtkWidget *vfwfe_check_save;
+	int save;
+
+	vfwfe_check_save = lookup_widget(GTK_WIDGET(button), "vfwfe_check_save");
+	save = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(vfwfe_check_save));
+
+	((struct conn_info *)user_data)->action = NF_ACCEPT;
+	vfwfe_conn_submit(&((struct conn_info *)user_data)->timeout, save);
+
+	free(user_data);
+	on_vfwfe_rule_cancel_clicked(button, NULL);
 }
 
 void on_vfwfe_rule_cancel_clicked(GtkButton *button,
@@ -65,5 +80,16 @@ void on_vfwfe_rule_cancel_clicked(GtkButton *button,
 void on_vfwfe_rule_drop_clicked(GtkButton *button,
 				gpointer user_data)
 {
+	GtkWidget *vfwfe_check_save;
+	int save;
+
+	vfwfe_check_save = lookup_widget(GTK_WIDGET(button), "vfwfe_check_save");
+	save = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(vfwfe_check_save));
+
+	((struct conn_info *)user_data)->action = NF_DROP;
+	vfwfe_conn_submit(&((struct conn_info *)user_data)->timeout, save);
+
+	free(user_data);
+	on_vfwfe_rule_cancel_clicked(button, NULL);
 }
 
