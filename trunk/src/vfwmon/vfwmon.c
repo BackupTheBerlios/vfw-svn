@@ -336,10 +336,8 @@ int vfwmon_open(struct inode *inode, struct file *filp)
 	inused = vfwmon_device->core.inused;
 	vfwmon_core_unlock();
 	
-	if (inused) {
-		vfwmon_debug("error: device is busy. only one controller is allowed\n");
+	if (inused)
 		return -EBUSY;
-	}
 
 	vfwmon_core_lock();
 	vfwmon_device->core.inused = 1;
