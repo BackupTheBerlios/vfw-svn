@@ -72,14 +72,14 @@ struct conn_info * vfwfe_conn_get(void)
 	return conn;
 }
 
-int vfwfe_conn_submit(unsigned long *id, int save)
+int vfwfe_conn_submit(struct conn_info *conn, int save)
 {
 	int ret;
 
 	if (save)
-		ret = ioctl(fd, VFWMON_IOC_SUBMIT_SAVE, id);
+		ret = ioctl(fd, VFWMON_IOC_SUBMIT_SAVE, conn);
 	else
-		ret = ioctl(fd, VFWMON_IOC_SUBMIT, id);
+		ret = ioctl(fd, VFWMON_IOC_SUBMIT, conn);
 
 	return ret;
 }
@@ -186,6 +186,8 @@ int main(int argc, char * argv[])
 	fcntl(fd, F_SETFL, fcntl(fd, F_GETFL) | FASYNC);
 
 	vfwfe_mode_set(MODE_RESET);
+	vfwfe_mode_set(MODE_MONITOR_ON);
+	vfwfe_mode_set(MODE_NOTIFIER_ON);
 
 	gtk_init(&argc, &argv);
 

@@ -24,6 +24,7 @@
 #define VFWMON_DELAY 1
 #define VFWMON_TIMEOUT 15
 #define VFWMON_RETRY 10
+#define VFWMON_MAX 10
 #define SHA1_DIGEST_SIZE 20
 
 struct conn_info {
@@ -49,6 +50,7 @@ struct vfwmon_core {
 	struct work_struct task;
 	struct list_head pending_list;
 	struct list_head rule_list;
+	unsigned int pending_count;
 };
 
 struct vfwmon_dev {
@@ -149,6 +151,7 @@ static void vfwmon_exit(void);
 				list_add_tail(&(r)->NODE, &vfwmon_rule_list); \
 				(r)->conn.action = (a); \
 				(r)->status = (s); \
+				vfwmon_device->core.pending_count--; \
 				vfwmon_debug("action submitted. rule removed from pending_list, added to rule_list\n"); \
 				break; \
 			} \

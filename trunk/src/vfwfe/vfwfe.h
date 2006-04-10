@@ -45,7 +45,7 @@ extern int fd;
 
 void vfwfe_mode_set(unsigned int mode_num);
 struct conn_info * vfwfe_conn_get(void);
-int vfwfe_conn_submit(unsigned long *id, int save);
+int vfwfe_conn_submit(struct conn_info *conn, int save);
 void vfwfe_path_get(pid_t pid, unsigned char *path);
 void vfwfe_checksum_calc(unsigned char *pcsum, const unsigned char *path);
 void vfwfe_checksum_print(const unsigned char *pcsum, unsigned char *result);

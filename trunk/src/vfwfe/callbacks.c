@@ -62,7 +62,7 @@ void on_vfwfe_rule_accept_clicked(GtkButton *button,
 	save = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(vfwfe_check_save));
 
 	((struct conn_info *)user_data)->action = NF_ACCEPT;
-	vfwfe_conn_submit(&((struct conn_info *)user_data)->timeout, save);
+	vfwfe_conn_submit((struct conn_info *)user_data, save);
 
 	free(user_data);
 	on_vfwfe_rule_cancel_clicked(button, NULL);
@@ -87,7 +87,7 @@ void on_vfwfe_rule_drop_clicked(GtkButton *button,
 	save = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(vfwfe_check_save));
 
 	((struct conn_info *)user_data)->action = NF_DROP;
-	vfwfe_conn_submit(&((struct conn_info *)user_data)->timeout, save);
+	vfwfe_conn_submit((struct conn_info *)user_data, save);
 
 	free(user_data);
 	on_vfwfe_rule_cancel_clicked(button, NULL);

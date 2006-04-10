@@ -400,6 +400,7 @@ int list_rule_add(struct conn_info *conn, struct list_head *head)
 
 	vfwmon_core_lock();
 	list_add_tail(&rule->NODE, head);
+	vfwmon_device->core.pending_count++;
 	vfwmon_core_unlock();
 
 	return 1;
@@ -439,7 +440,7 @@ unsigned int vfwmon_hook_func(unsigned int hooknum,
 	unsigned char protocol;
 	struct conn_info conn;
 	struct vfwmon_rule *rule, *tmprule;
-	int ret = NF_ACCEPT, newconn = 0, found = 0;
+	int ret = NF_ACCEPT, newconn = 0, found = 0, count;
 
 	if (!vfwmon_mode_is_monitoring())
 		return ret;
@@ -501,6 +502,12 @@ unsigned int vfwmon_hook_func(unsigned int hooknum,
 
 	if (found)
 		return ret;
+
+	vfwmon_core_lock();
+	count = vfwmon_device->core.pending_count;
+	vfwmon_core_unlock();
+	if (count >= VFWMON_MAX)
+	       return NF_DROP;
 
 	ret = list_rule_add(&conn, &vfwmon_pending_list);
 	if (!ret)
@@ -590,6 +597,7 @@ int vfwmon_mode_set(unsigned int mode)
 			vfwmon_check_cancel();
 			vfwmon_core_lock();
 			vfwmon_device->core.mode = 0;
+			vfwmon_device->core.pending_count = 0;
 			vfwmon_core_unlock();
 			list_free_all();
 			break;
@@ -612,6 +620,7 @@ void vfwmon_check(void)
 	list_for_each_entry_safe(rule, tmprule, &vfwmon_pending_list, NODE)
 		if (time_after_eq(jiffies, rule->conn.timeout)) {
 			list_rule_del(rule);
+			vfwmon_device->core.pending_count--;
 			vfwmon_debug("pending rule removed from pending_list\n");
 		}
 	vfwmon_core_unlock();
